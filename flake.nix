@@ -3,7 +3,7 @@
   inputs.home-manager.url = github:nix-community/home-manager;
   inputs.deploy-rs.url = "github:serokell/deploy-rs";
   inputs.agenix.url = "github:ryantm/agenix";
-  inputs.disko.url = "github:nix-community/disk";
+  inputs.disko.url = "github:nix-community/disko";
 
   outputs = { self, nixpkgs, home-manager, deploy-rs, agenix, disko, ... }@attrs: {
     nixosConfigurations."remote-data-store" = nixpkgs.lib.nixosSystem {

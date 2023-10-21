@@ -1,18 +1,17 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# and in the NixOS manual (accessible by running `nixos-help`).
 
-{ config, lib, pkgs, home-manager, agenix, ... }:
+{ config, pkgs, home-manager, agenix, disko, ... }:
 
 let
   sshPubKey = builtins.readFile ./id_rsa.pub;
- in {
+in {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./modules/traefik-dc.nix
-      ./modules/wgeasy-dc.nix
       agenix.nixosModules.default
+      disko.nixosModules.default
     ];
 
   # Enable flakes
@@ -22,7 +21,7 @@ let
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "smarthub-ng"; # Define your hostname.
+  networking.hostName = "remote-data-store"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
@@ -35,7 +34,7 @@ let
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  # i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -44,13 +43,10 @@ let
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-  
+
   # Configure keymap in X11
   # services.xserver.layout = "us";
-  # services.xserver.xkbOptions = {
-  #   "eurosign:e";
-  #   "caps:escape" # map caps to escape.
-  # };
+  # services.xserver.xkbOptions = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -118,6 +114,7 @@ let
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.openssh.settings.PermitRootLogin = "yes";
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -131,35 +128,18 @@ let
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # on your system were taken. It's perfectly fine and recommended to leave
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.05"; # Did you read the comment?
+  system.stateVersion = "23.05"; # Did you read the comment?
 
   # Enable auto upgrades from current main branch on remote
   system.autoUpgrade = {
     enable = true;
-    flake = "github:glanch/smarthub-ng";
+    flake = "github:glanch/remote-data-store";
     dates = "03:00";
     allowReboot = true;
-  };
-
-  # Add Garbage Collection
-  nix.gc = {
-    automatic = true;
-    dates = "daily";
-    options = "--delete-older-than 5d";
-  };
-  services.traefikDC = {
-    enable = true;
-    acmeStaging = false;
-    agenixTraefikEnvFile = ./secrets/wgeasy/env.age;
-  };
-
-  services.wgeasyDC = {
-    enable = true;
-    agenixWgeasyEnvFile = ./secrets/wgeasy/env.age;
   };
 }
 
