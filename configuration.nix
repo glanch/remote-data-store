@@ -13,6 +13,7 @@ in {
       home-manager.nixosModules.default
       agenix.nixosModules.default
       disko.nixosModules.default
+      ./disk-config.nix
     ];
 
   # Enable flakes

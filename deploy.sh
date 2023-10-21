@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-nix run github:serokell/deploy-rs .#smarthub-ng 
+nix run github:serokell/deploy-rs .#remote-data-store 
