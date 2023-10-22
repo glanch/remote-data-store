@@ -14,6 +14,7 @@ in {
       agenix.nixosModules.default
       disko.nixosModules.default
       ./disk-config.nix
+      ./modules/nextcloud-backup-sink.nix
     ];
 
   # Enable flakes
@@ -150,5 +151,42 @@ in {
     dates = "daily";
     options = "--delete-older-than 5d";
   };
+
+
+  # Backup configuration 
+
+  # Data disk
+  fileSystems."/data" = { 
+    device = "/dev/disk/by-uuid/6bc91492-04b8-4f16-b789-69f3415826d0";
+    fsType = "ext4";
+  };
+
+  # Create container for nextcloud backup user
+  services.nextcloud-backup-sink = {
+    enable = true;
+    user = {
+      uid = 13601;
+      publicKeys = [ sshPubKey ];
+      username = "nextcloud-backup";
+    };
+
+    rootUser.publicKeys = [ sshPubKey ];
+    data = {
+      hostPath = "/data/storage/Backups/nextcloud-backup";
+      containerPath = "/data/nextcloud-backup";
+    };
+
+    networking = {
+      sshd = {
+        internalPort = 22;
+        externalPort = 10022;
+      };
+      container = {
+        hostAddress = "10.74.5.1";
+        localAddress = "10.74.5.2";
+      };
+    };
+  };
 }
+
 
