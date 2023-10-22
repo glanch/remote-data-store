@@ -1,11 +1,11 @@
 { lib, pkgs, config, agenix, ... }:
 with lib;
 let
-  cfg = config.services.nextcloud-backup-sink;
+  cfg = config.services.zaphod-backup-sink;
 in
 {
-  options.services.nextcloud-backup-sink = {
-    enable = mkEnableOption "Backup sink for nextcloud backup";
+  options.services.zaphod-backup-sink = {
+    enable = mkEnableOption "Backup sink for zaphod backup";
     
     rootUser.publicKeys = mkOption {
       type = types.listOf types.str;
@@ -16,7 +16,7 @@ in
     data = {
       hostPath = mkOption {
         type = types.str;
-        default = "/data/storage/Backups/nextcloud-backup";
+        default = "/data/storage/Backups/zaphod-backup";
       };
 
       localPath = mkOption {
@@ -30,7 +30,7 @@ in
 
     user.username = mkOption {
       type = types.str;
-      default = "nextcloud-backup";
+      default = "zaphod-backup";
     };
 
     user.publicKeys = mkOption {
@@ -69,7 +69,7 @@ in
       openssh.authorizedKeys.keys = cfg.user.publicKeys;
     };
 
-    containers.nextcloud-backup =
+    containers.zaphod-backup =
     {
       privateNetwork = true;
       
@@ -87,7 +87,7 @@ in
             settings.KbdInteractiveAuthentication = false;
             settings.PermitRootLogin = "no";
           };
-
+          
           users.mutableUsers = false;
           users.users."${cfg.user.username}" = {
             uid = cfg.user.uid;

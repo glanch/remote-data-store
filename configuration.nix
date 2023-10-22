@@ -15,6 +15,7 @@ in {
       disko.nixosModules.default
       ./disk-config.nix
       ./modules/nextcloud-backup-sink.nix
+      ./modules/zaphod-backup-sink.nix
     ];
 
   # Enable flakes
@@ -166,24 +167,53 @@ in {
     enable = true;
     user = {
       uid = 13601;
-      publicKeys = [ sshPubKey ];
+      publicKeys = [ sshPubKey "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCY9H5oeekHymj2G7mCisdtqWf1aqLwYNqrBO6nF+4U7z/x22KOTsjhu+dTcfGy/O0bCJPKLQNyM1MtqWYStbtex2xLR1TFsVsRcElh8CYk8k0obqNIzBCaywZ9PRY+V8ezhqX9YBd+dYLY2E0AAqXcjPXgni/nN9sYTV+ZgzZxM8vEgACloER0vdoyBY7ob/dZf9IXCJ1mCLlvDQcVVutyyXEISNJO5Hri0Rudf8rzYvqhzFuZlRvVAQ9nqZr31e4KZLABG4+mxV8dDKiyK/jm7kdsh4CRsnIXmm3FOb60dtHV1yQtgrszst28tMP8wKtAv80Ae9JLKVoYEnwMltaqv/zp52l6cUnjXGlP6mKtxShQPOm25kkfe++WQ5sSoHlw2ukNIwoj3VONpERr8idErmL5tMDl/xiD1vxCHCkGB31GzqWEXswmO1DkWEx+X8M6iiCf4ofXuFGTe6O+NR3ONq7ri2Acu5tNN9eSQqcWU33jCoNZ4CLWWVb7RlKjiWM= christopher@t20"];
       username = "nextcloud-backup";
     };
 
     rootUser.publicKeys = [ sshPubKey ];
     data = {
       hostPath = "/data/storage/Backups/nextcloud-backup";
-      containerPath = "/data/nextcloud-backup";
+      localPath = "/data/nextcloud-backup";
     };
 
     networking = {
       sshd = {
         internalPort = 22;
-        externalPort = 10022;
+        externalPort = 14622;
       };
+
       container = {
         hostAddress = "10.74.5.1";
         localAddress = "10.74.5.2";
+      };
+    };
+  };
+
+  # Create container for zaphod backup user
+  services.zaphod-backup-sink = {
+    enable = true;
+    user = {
+      uid = 13602;
+      publicKeys = [ sshPubKey "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCkaFCTvTryqqkyCNCCTp5DFTsJsaonl4nRxIOA3NsQgPQACGfSREX9cO5xC1JmRYakI95DaQCXuL0czIAmjqvtQUS2KKA5r7WnW6rvZUJ9RZ7AnxtWYDzJD3HpNpG0+gy9ZLl2CDE7vfur6cbrhsS6KaatH6mizEJrRhVmbZ0qC7GNASWQR54NV+Is8JqD/o6Cp8q70Jz5AieJvhEPIVWzjsiZe6GFYUTVt/RKKKOWxa5KStO0fLYD8IKEs2NtdiUlAp6DbSKtXvJIDxJmooZkA7lCpOaY/SIkuiTMKax0nc6JT/CEbAv5y24jFvQT9OSQ9UYMHIErD0TlL0vCbOIf4cBy85i3H9oDvFID2yDq5VX0Gz0jfXIsvzCyRxJtRatj6koM9p44EzYiq3stfX7H5Yv9ISvnJFSJC6wPkUfxjaFFYZYKYC/VsB017KmBo3bWj2vYNo4WJvNe7RAV3V1fegaB7Q++iWo8u7Kg5HkBbNM7u1Lfv9OHbAyvzaBl8ys= christopher@t20"];
+      username = "zaphod-backup";
+    };
+
+    rootUser.publicKeys = [ sshPubKey ];
+    data = {
+      hostPath = "/data/storage/Backups/zaphod-backup";
+      localPath = "/data/zaphod-backup";
+    };
+
+    networking = {
+      sshd = {
+        internalPort = 22;
+        externalPort = 15622;
+      };
+
+      container = {
+        hostAddress = "10.74.6.1";
+        localAddress = "10.74.6.2";
       };
     };
   };
