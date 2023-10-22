@@ -143,5 +143,12 @@ in {
     dates = "03:00";
     allowReboot = true;
   };
+
+  # Add Garbage Collection
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 5d";
+  };
 }
 
