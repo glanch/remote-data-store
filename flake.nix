@@ -1,6 +1,6 @@
 {
-  inputs.nixpkgs.url = github:NixOS/nixpkgs;
-  inputs.home-manager.url = github:nix-community/home-manager;
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+  inputs.home-manager.url = "github:nix-community/home-manager/release-24.05";
   inputs.deploy-rs.url = "github:serokell/deploy-rs";
   inputs.agenix.url = "github:ryantm/agenix";
   inputs.disko.url = "github:nix-community/disko";
