@@ -13,7 +13,7 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@vmain
+        uses: DeterminateSystems/update-flake-lock@main
         id: cpr
         with:
           pr-title: "Update flake.lock" # Title of PR to be created
